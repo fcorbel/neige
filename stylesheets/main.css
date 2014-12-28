@@ -1,0 +1,72 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  position: fixed;
+  z-index: 0;
+}
+
+
+.gui {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  display: none;
+}
+
+#turnQueue {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-left: 100px;
+}
+
+#endTurnBtn {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+#selectionInfos {
+  position: fixed;
+  right: 0;
+  top: 60px;
+  height: 200px;
+  width: 160px;
+}
+
+#actionsList {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  opacity: 0.6;
+  padding: 0;
+  border: 2px solid black;
+}
+
+#actionsList:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+#actionsList li {
+  border-bottom: 1px solid black;
+  font-size: 1.6rem;
+  padding: 1rem;
+}
+
+#actionsList li:hover {
+  background-color: #00a0b0;
+}
+
+#actionsList li:first-letter {
+  text-transform: capitalize;
+}

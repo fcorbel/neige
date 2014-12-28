@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+  <head>
+    <title>neige</title>
+    <meta charset="utf-8">
+    <style>
+    </style>
+    <link href="stylesheets/default.css" media="screen, projection" rel="stylesheet" type="text/css" />
+    <link href="stylesheets/main.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  </head>
+<body>
+  <div id="screen" tabindex="0">
+    <!-- Zone GUI -->
+    <div id="zoneGUI" class="gui" tabindex="1">
+      <button id="endTurnBtn">End turn</button>
+      <div id="turnQueue" class="menuBar">
+        <ol>
+        </ol>
+      </div>
+      <div id="selectionInfos" class="floatingBox">
+        <h3 id="entName">none</h3>
+        <span id="entType">none</span>
+        <br />
+        <span id="entPos">_, _, _</span>
+      </div>
+      <div id="actionsList" class="floatingBox">
+        <ol>
+        </ol>
+      </div>
+    </div>
+    <!-- Editor GUI -->
+    <div id="editorGUI" class="gui" tabindex="1">
+      <button id="newZoneBtn">Create new zone</button>
+      <button id="saveZoneBtn">Save</button>
+      <div id="levelIndicator">
+        <output for="lvlInd">0</output>
+        <input type="range" id="lvlInd" min="0" value="0" />
+      </div>
+      <div id="brushControls">
+        <div id="brushSizes">
+          <label for="size1">1</label>
+          <input type="radio" name="brS" id="size1" class="brushSize" value="1" checked/>
+          <label for="size2">2</label>
+          <input type="radio" name="brS" id="size2" class="brushSize" value="2"/>
+          <label for="size3">3</label>
+          <input type="radio" name="brS" id="size3" class="brushSize" value="3"/>
+        </div>
+        <ul id="elementList">
+          <li id="clear" class="elSelected">Clear</li>
+        </ul>
+      </div>
+      <div id="hoveredElement">
+        <span id="coord"></span>
+        <span id="elName"></span>
+      </div>
+
+      <div class="modal">
+        <div id="newZoneDial" class="dialog">
+          <ul>
+            <li><label for="sizeX">Size X</label><input id="sizeX" type="number" min="1" value="10"/></li>
+            <li><label for="sizeY">Size Y</label><input id="sizeY" type="number" min="1" value="4"/></li>
+            <li><label for="sizeZ">Size Z</label><input id="sizeZ" type="number" min="1" value="10"/></li>
+          </ul>
+          <ul class="wndNav right">
+            <li><button id="closeNewZoneDialBtn" class="btn">Cancel</button></li>
+            <li><button id="createNewZoneDialBtn" class="btn primary">Create</button></li>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="../libs/fpsmeter.min.js"></script>
+  <script src="../libs/three.min.js"></script>
+  <script src="../libs/tween.min.js"></script>
+  <script src="keyboard.js"></script>
+  <script src="graphics.js"></script>
+  <script src="movement.js"></script>
+  <script src="containers.js"></script>
+  <script src="eventManager.js"></script>
+  <script src="component.js"></script>
+
+  <script src="systems/dataSystems.js"></script>
+  <script src="systems/actionSystems.js"></script>
+  <script src="systems/behaviourSystems.js"></script>
+  <script src="systems/graphicsSystems.js"></script>
+  <script src="systems/ruleSystems.js"></script>
+
+
+  <script src="entity.js"></script>
+  <script src="stateManager.js"></script>
+  <script src="zoneState.js"></script>
+  <script src="editorGUI.js"></script>
+  <script src="zoneGUI.js"></script>
+  <script src="editorState.js"></script>
+  <script src="brush.js"></script>
+  <script src="pointer.js"></script>
+  <script src="effects.js"></script>
+  <script src="actions.js"></script>
+  <script type="text/javascript">
+    "use strict"
+
+    var domEl = document.getElementById("screen");
+    // domEl.setAttribute("tabindex", 0); //otherwise key event doesn't fire
+    domEl.addEventListener("mousedown", function(e) {
+          stateManager.handleMouseClicked(true, e);
+        }, false);
+    domEl.addEventListener("mouseup", function(e) {
+          stateManager.handleMouseClicked(false, e);
+        }, false);
+    domEl.addEventListener("wheel", stateManager.handleMouseWheel, false);
+    domEl.addEventListener("mousemove", stateManager.handleMouseMoved, false);
+    document.addEventListener("keydown", stateManager.handleKeyboardDown, false);
+    document.addEventListener("keyup", stateManager.handleKeyboardUp, false);
+
+    stateManager.pushState(Game.States.createZone());
+    // stateManager.pushState(Game.States.createEditor());
+
+    // Game loop
+    var fpsmeter = new FPSMeter({decimals: 0, graph: true, theme: 'dark', right: '5px', bottom: '5px', left: 'auto', top: 'auto'});    
+    var now,
+        dt   = 0,
+        last = window.performance.now(),
+        step = 1/30;
+    function frame() {
+      fpsmeter.tickStart();      
+      now = window.performance.now();
+      dt = dt + Math.min(1, (now - last) / 1000);
+
+      while(dt > step) {
+        dt = dt - step;
+        stateManager.update(step);
+      }
+      stateManager.draw(dt);
+      last = now;
+      requestAnimationFrame(frame);
+      fpsmeter.tick();      
+    }
+    requestAnimationFrame(frame);
+
+  </script>
+</body>
+</html>
